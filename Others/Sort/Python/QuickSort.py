@@ -2,7 +2,12 @@
 
 class QuickSort(object):
 
-    def sort(self, arr, left, right):
+    def sort(self, arr):
+        left = 0
+        right = len(arr) - 1
+        self.basicQuickSort(arr, left, right)
+
+    def basicQuickSort(self, arr, left, right):
         if left >= right:
             return
         
@@ -18,8 +23,8 @@ class QuickSort(object):
             arr[low], arr[high] = arr[high], arr[low]
 
         arr[left], arr[high] = arr[high], arr[left]
-        self.sort(arr, left, high - 1)
-        self.sort(arr, high + 1, right)
+        self.basicQuickSort(arr, left, high - 1)
+        self.basicQuickSort(arr, high + 1, right)
 
     def threeWaySort(self, arr, left, right):
         if left >= right:
@@ -46,5 +51,5 @@ if __name__ == "__main__":
     arr = [1, 2, 3, 2, 4, 7, 6, 5, 7, 6, 7, 5, 3]
     print(arr)
     qs = QuickSort()
-    qs.sort(arr, 0, 12)
+    qs.sort(arr)
     print(arr)
