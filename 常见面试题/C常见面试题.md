@@ -57,3 +57,68 @@ const是由数据类型的，编译的时候就会检查，而宏定义只是简
 
 #### 如何用二进制表示一个负数
 正数按位取反后 + 1
+
+#### padding，通知编译器在编译的时候不要添加额外的对齐
+```c
+struct __attribute__((__packed__)) mystruct_A {
+    char a;
+    int b;
+    char c;
+};
+```
+
+#### 当main()函数执行的时候，发生了什么
+- 由shell进程fork()一个子进程
+- 调用exec()
+- 调用ld-linux动态链接器创建内存映像
+- 将可执行ELF文件的内存段load到内存映像中
+- 将动态链接的ELF文件的内存段load到内存映像中
+- 立刻就重定位或者等到跑到这段需要动态链接的代码的时候再重定位
+- 关闭文件描述符
+- 将控制权交给程序
+
+#### malloc, calloc, zalloc区别
+```c
+void* malloc(numElements * sizeofElements); //不会初始化，需要通过memset初始化
+void* calloc(numElements, sizeofElements); //初始化为0，指针不会被初始化为NULL
+void* zalloc(numElements * sizeofElements); //分配的内存都填了0
+```
+
+#### inline关键字的作用
+- 被inline关键字修饰的函数，在编译的时候会被编译器展开copy到引用的地方
+- 是否copy是由编译器自己判断的，如果函数太长，编译器也有可能不展开copy
+- 必须在.h文件里加上定义，因为在函数展开后函数名就没有了，每个include这个头文件的调用都需要知道它的函数名
+- 优点：
+  - 减少调用时入栈出栈的开销
+  - 函数调用有可能引起缺页，降低页置换的概率
+- 缺点：
+  - 在每个调用的地方都有一份copy，代码冗余
+
+#### union用法
+```c
+union var{
+	char ch;
+	int num1;
+	double num2;
+};
+```
+union中每个成员共用一段空间，类似于一个变量的不同表现形式
+
+#### gdb
+- gcc -g -o xxx.o xxx.c 打开gdb的开关
+- gdb -p ./xxx.o
+- list main
+- bt 列出函数调用顺序
+- frame N 进到某个函数栈里
+- info args
+- info locals
+- info frame
+- info variables
+- break
+- next
+- run
+- print
+- disassemble func
+- x/ 查看内存
+
+
