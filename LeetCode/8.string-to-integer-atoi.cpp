@@ -83,10 +83,58 @@
  * Thefore INT_MIN (−2^31) is returned.
  * 
  */
+#include<bits/stdc++.h> 
+#include<string>
+using namespace std;
 class Solution {
+private:
+    int getNum(int num, bool isNeg) {
+        if (isNeg) {
+            return -num;
+        }
+        return num;
+    }
+    bool isNumber(char a) {
+        return a >= '0' && a <= '9';
+    }
 public:
     int myAtoi(string str) {
-        
+        int num = 0;
+        bool isNeg = false;
+        for (int i = 0; i < str.length(); i++) {
+            if (str[i] == ' ') {
+                if (i > 0 && str[i - 1] != ' ') {
+                    return getNum(num, isNeg);
+                }
+                continue;
+            }
+
+            if ((str[i] == '-' || str[i] == '+') && i < (str.length() - 1) && isNumber(str[i + 1])) {
+                if (i > 0 && str[i - 1] != ' ') {
+                    return getNum(num, isNeg);
+                }
+                if (str[i] == '-') {
+                    isNeg = true;
+                }
+                continue;
+            }
+
+            if (!isNumber(str[i])) {
+                return getNum(num, isNeg);
+            }
+
+            int val = str[i] - '0';
+            if ((!isNeg && (num < INT_MAX / 10) || ( num == INT_MAX / 10 && val < INT_MAX % 10)) ||
+                (isNeg && (-num > INT_MIN / 10) || ( -num == INT_MIN / 10 && (-1 * val) > INT_MIN % 10))) {
+                    num = num * 10 + str[i] - '0';
+            } else {
+                if (isNeg) {
+                    return INT_MIN;
+                }
+                return INT_MAX;
+            }
+        }
+        return getNum(num, isNeg);
     }
 };
 
